@@ -4,7 +4,11 @@ class CustomersController < ApplicationController
 
   def index
     @customers = Customer.all
-    @contacts = @client.Contact.all(:order => 'Name')
+    begin
+      @contacts = @client.Contact.all(:order => 'Name')
+    rescue Exception => e
+      redirect_to new_xero_session_path
+    end
   end
 
   def show

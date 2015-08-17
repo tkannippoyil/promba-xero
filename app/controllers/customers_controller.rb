@@ -26,8 +26,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        new_contact = @client.Contact.build(:name => @customer.first_name)
-        new_contact.save
+        @customer.sync_with_xero(@client)
         format.html { redirect_to @customer, notice:
                       'Customer was successfully created.' }
         format.json { render :show, status: :created,
@@ -81,7 +80,6 @@ class CustomersController < ApplicationController
       session[:xero_auth]['access_token'],
       session[:xero_auth]['access_key']
     )
-
   end
 
 end

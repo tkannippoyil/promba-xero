@@ -4,34 +4,28 @@ require "rails_helper"
 describe Api::V1::CustomersController do
 
   describe 'index' do
-    customer =         {
-            email: "aabb@hh.de",
-            first_name: "test",
-            last_name: "1"
-        }
+    customer = nil
     before do
-      Customer.create(customer)
+      customer = create(:customer)
       get :index, format: :json
     end
     it do
+      users = JSON.parse(response.body)
       expect(response).to be_success
-      expect(response.body).to include(customer[:email])
+      expect(users[0]['email']).to eq(customer[:email])
     end
   end
 
   describe 'show' do
-    customer = {
-        email: "aabb@hh.de",
-        first_name: "test",
-        last_name: "2"
-    }
+    customer = nil
     before do
-      Customer.create(customer)
+      customer = create(:customer)
       get :index, format: :json
     end
     it do
+      user = JSON.parse(response.body)[0]
       expect(response).to be_success
-      expect(JSON.parse(response.body)[0]['email']).to eq(customer[:email])
+      expect(user['email']).to eq(customer[:email])
     end
 
   end

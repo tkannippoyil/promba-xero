@@ -24,19 +24,13 @@ class CustomersController < ApplicationController
   def create
     @customer = Customer.new(customer_params)
 
-    respond_to do |format|
-      if @customer.save
-        new_contact = @client.Contact.build(:name => @customer.first_name)
-        new_contact.save
-        format.html { redirect_to @customer, notice:
-                      'Customer was successfully created.' }
-        format.json { render :show, status: :created,
-                      location: @customer }
-      else
-        format.html { render :new }
-        format.json { render json: @customer.errors,
-                      status: :unprocessable_entity }
-      end
+    if @customer.save
+      new_contact = @client.Contact.build(:name => @customer.first_name)
+      new_contact.save
+      redirect_to @customer, notice: 'Customer was successfully created.' 
+
+    else
+      render :new 
     end
   end
 
@@ -47,7 +41,7 @@ class CustomersController < ApplicationController
         format.json { render :show, status: :ok, location: @customer }
       else
         format.html { render :edit }
-        format.json { render json: @customer.errors, status: :unprocessable_entity }
+        # format.json { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -66,7 +60,12 @@ class CustomersController < ApplicationController
   end
 
   def customer_params
-    params.require(:customer).permit(:first_name, :last_name, :date_of_birth, :home_address, :email, :mobile_number, :employment_basis, :classification, :gender, :pay_adjustment, :xeroemployeeid, :preferred_name, :is_supervisor)
+    params.require(:customer).permit(
+      :first_name, :last_name, :date_of_birth, 
+      :home_address, :email, :mobile_number, :employment_basis, 
+      :classification, :gender, :pay_adjustment, :xeroemployeeid, 
+      :preferred_name, :is_supervisor
+      )
   end
 
   def get_xero_client
@@ -74,13 +73,15 @@ class CustomersController < ApplicationController
       XERO_CONFIG['consumer_key'],
       XERO_CONFIG['consumer_secret']
     )
-    logger.info(session[:xero_auth]['access_token'] )
-    logger.info(session[:xero_auth]['access_key'] )
+    if session[:xero_auth]
+      logger.info(session[:xero_auth]['access_token'] )
+      logger.info(session[:xero_auth]['access_key'] )
 
-    @client.authorize_from_access(
-      session[:xero_auth]['access_token'],
-      session[:xero_auth]['access_key']
-    )
+      @client.authorize_from_access(
+        session[:xero_auth]['access_token'],
+        session[:xero_auth]['access_key']
+      )
+    end
 
   end
 

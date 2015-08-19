@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:xero_id) %></th>
       <th><%= model_class.human_attribute_name(:first_name) %></th>
       <th><%= model_class.human_attribute_name(:last_name) %></th>
       <th><%= model_class.human_attribute_name(:date_of_birth) %></th>
@@ -27,6 +28,7 @@
     <% @customers.each do |customer| %>
       <tr>
         <td><%= link_to customer.id, customer_path(customer) %></td>
+        <td><%= customer.xero_id %></td>
         <td><%= customer.first_name %></td>
         <td><%= customer.last_name %></td>
         <td><%= customer.date_of_birth %></td>

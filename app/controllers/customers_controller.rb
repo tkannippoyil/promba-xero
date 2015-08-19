@@ -25,8 +25,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new(customer_params)
 
     if @customer.save
-      new_contact = @client.Contact.build(:name => @customer.first_name)
-      new_contact.save
+        @customer.sync_with_xero(@client)
       redirect_to @customer, notice: 'Customer was successfully created.' 
 
     else
@@ -82,7 +81,6 @@ class CustomersController < ApplicationController
         session[:xero_auth]['access_key']
       )
     end
-
   end
 
 end

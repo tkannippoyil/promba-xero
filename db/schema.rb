@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150820062944) do
+ActiveRecord::Schema.define(version: 20150820112815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,12 +59,35 @@ ActiveRecord::Schema.define(version: 20150820062944) do
     t.string   "xero_id"
   end
 
+  create_table "prompa_organisations", force: :cascade do |t|
+    t.string   "owner_id"
+    t.string   "organisation_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  create_table "prompa_xero_connections", force: :cascade do |t|
+    t.string   "prompa_organisation_id"
+    t.string   "xero_organisation_id"
+    t.string   "xero_token"
+    t.boolean  "valid"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string   "consumer_key"
     t.string   "consumer_secret"
     t.string   "prompa_url"
     t.string   "prompa_token"
     t.string   "api_token"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  create_table "xero_organisations", force: :cascade do |t|
+    t.string   "owner_id"
+    t.string   "organisation_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end

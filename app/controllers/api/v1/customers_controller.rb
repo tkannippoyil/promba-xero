@@ -1,6 +1,6 @@
 module Api
   module V1
-    class CustomersController < ApiApplicationController
+    class CustomersController < Api::ApplicationController
       #http_basic_authenticate_with name: "admin", password: "secret"
 
       class Customer < ::Customer

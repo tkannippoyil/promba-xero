@@ -18,5 +18,7 @@ Admin.create!(
 Setting.create!(
   consumer_key: XERO_CONFIG['consumer_key'],
   consumer_secret: XERO_CONFIG['consumer_secret'],
-  api_token: 'test123',
+  api_token: 'token1',
+  prompa_url:"http://prompa-sandbox.herokuapp.com/api/v1/",
+  prompa_token:'SRLA1vfJ6o3ZefaEy958',
 ) unless Setting.first

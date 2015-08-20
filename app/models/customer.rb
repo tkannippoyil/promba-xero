@@ -1,5 +1,5 @@
 class Customer < ActiveRecord::Base
-  validates_uniqueness_of :first_name
+  # validates_uniqueness_of :first_name
 
   def sync_with_xero(xero_client)
     xero_new_contact = xero_client.Contact.build(

@@ -23,7 +23,7 @@ describe Api::V1::CustomersController do
       get :index, format: :json
     end
     it do
-      user = JSON.parse(response.body)[0]
+      user = JSON.parse(response.body).last
       expect(response).to be_success
       expect(user['email']).to eq(customer[:email])
     end

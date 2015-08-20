@@ -1,0 +1,59 @@
+<%= form_for @setting, url: settings_path, :html => { :class => "form-horizontal setting" } do |f| %>
+
+    <% if @setting.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@setting.errors.count, "error") %> prohibited this setting from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @setting.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :consumer_key, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :consumer_key, :class => 'form-control' %>
+    </div>
+    <%= error_span(@setting[:consumer_key]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :consumer_secret, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :consumer_secret, :class => 'form-control' %>
+    </div>
+    <%= error_span(@setting[:consumer_secret]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :prompa_url, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :prompa_url, :class => 'form-control' %>
+    </div>
+    <%= error_span(@setting[:prompa_url]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :prompa_token, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :prompa_token, :class => 'form-control' %>
+    </div>
+    <%= error_span(@setting[:prompa_token]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :api_token, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :api_token, :class => 'form-control' %>
+    </div>
+    <%= error_span(@setting[:api_token]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            settings_path, :class => 'btn btn-default' %>
+
+<% end %>

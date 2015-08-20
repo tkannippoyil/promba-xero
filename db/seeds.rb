@@ -5,3 +5,18 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+XERO_CONFIG = YAML.load_file("#{::Rails.root}/config/xero.yml")[::Rails.env]
+ADMIN = YAML.load_file("#{::Rails.root}/config/admin.yml")[::Rails.env]
+
+Admin.create!(
+  email: ADMIN['email'],
+  password: ADMIN['password'],
+  password_confirmation: ADMIN['password_confirmation']
+) unless Admin.first
+
+Setting.create!(
+  consumer_key: XERO_CONFIG['consumer_key'],
+  consumer_secret: XERO_CONFIG['consumer_secret'],
+  api_token: 'test123',
+) unless Setting.first

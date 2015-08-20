@@ -1,7 +1,12 @@
 FactoryGirl.define do
-    factory :customer do
-        email "aabb@hh.de"
-        first_name "test"
-        last_name "factory 1"
+    sequence :email do |n|
+        "customer#{n}@test.com"
     end
+
+    factory :customer do
+        email
+        first_name "factory"
+        last_name "user"
+    end
+
 end

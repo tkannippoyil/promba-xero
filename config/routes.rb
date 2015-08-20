@@ -2,6 +2,9 @@ require 'api_constraints'
 
 Rails.application.routes.draw do
 
+  devise_for :admins
+
+
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       resources :customers
@@ -10,16 +13,19 @@ Rails.application.routes.draw do
 
 
 
-  resources :customers
+  # resources :customers
   resources :xero_session
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'customers#index'
+  root 'settings#show'
 
   # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
+  resource :settings
+  # get 'settings/' => 'settings#show'
+  # get 'settings/edit' => 'settings#edit'
+  # post 'settings/' => 'settings#update'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase

@@ -73,9 +73,6 @@ class CustomersController < ApplicationController
       XERO_CONFIG['consumer_secret']
     )
     if session[:xero_auth]
-      logger.info(session[:xero_auth]['access_token'] )
-      logger.info(session[:xero_auth]['access_key'] )
-
       @client.authorize_from_access(
         session[:xero_auth]['access_token'],
         session[:xero_auth]['access_key']

@@ -2,32 +2,15 @@ module Api
   module V1
     class XeroSessionController < Api::ApplicationController
 
-      before_filter :get_xero_client
+      before_action :set_xero_client
+
+
 
       public
 
       def index
-        @xero_client.authorize_from_request(
-            session[:request_token],
-            session[:request_secret],
-            :oauth_verifier => params[:oauth_verifier]
-        )
-
-        session[:xero_auth] = {
-            :access_token => @xero_client.access_token.token,
-            :access_key => @xero_client.access_token.secret
-        }
-
-        session[:request_token] = nil
-        session[:request_secret] = nil
-
-        redirect_to customers_url
-      end
-
-      def new
-        logger.info(url_for(action: 'create'))
         request_token = @xero_client.request_token(
-            :oauth_callback => url_for(action: 'create')
+          :oauth_callback => new_api_xero_session_url(params)
         )
         session[:request_token] = request_token.token
         session[:request_secret] = request_token.secret
@@ -35,43 +18,58 @@ module Api
         redirect_to request_token.authorize_url
       end
 
-      def create
-        @xero_client.authorize_from_request(
-            session[:request_token],
-            session[:request_secret],
-            :oauth_verifier => params[:oauth_verifier] )
+      def new
+        begin
+          @xero_client.authorize_from_request(
+                session[:request_token],
+              session[:request_secret],
+              :oauth_verifier => params[:oauth_verifier]
+          )
 
-        session[:xero_auth] = {
-            :access_token => @xero_client.access_token.token,
-            :access_key => @xero_client.access_token.secret
-        }
+          @prompa_xero_connection= PrompaXeroConnection
+                                          .find_or_initialize_by(
+              prompa_organisation_id: params['prompa_organisation_id']
+          )
 
-        session[:request_token] = nil
-        session[:request_secret] = nil
+          @prompa_xero_connection.xero_token = @xero_client.access_token.token
+          @prompa_xero_connection.xero_key = @xero_client.access_token.secret
+          @prompa_xero_connection.expired = true
+
+          @prompa_xero_connection.xero_organisation_id = params['org']
+
+          @prompa_xero_connection.save!
+
+
+
+          @xero_organisation = XeroOrganisation.find_or_initialize_by(
+              organisation_id: params['org']
+          )
+
+          @xero_organisation.owner_id = @xero_client.User.first.id
+          @xero_organisation.save
+
+          session[:request_token] = nil
+          session[:request_secret] = nil
+
+          render json: {'success': 'Connected with Xero'}
+        rescue Exception => error
+          session[:xero_auth] = nil
+          render json: {'error': 'Not able to connect with Xero: ' + error.to_s}
+        end
       end
 
       def destroy
         session.data.delete(:xero_auth)
       end
 
-      private
 
-      def get_xero_client
-        logger.info(XERO_CONFIG['consumer_key'])
+      def set_xero_client
         @xero_client = Xeroizer::PublicApplication.new(
-            XERO_CONFIG['consumer_key'],
-            XERO_CONFIG['consumer_secret'],
+            @setting.consumer_key,
+            @setting.consumer_secret,
         )
-
-        logger.info(@xero_client)
-        # Add AccessToken if authorised previously.
-        if session[:xero_auth]
-          @xero_client.authorize_from_access(
-              session[:xero_auth][:access_token],
-              session[:xero_auth][:access_key]
-          )
-        end
       end
+
     end
   end
 end

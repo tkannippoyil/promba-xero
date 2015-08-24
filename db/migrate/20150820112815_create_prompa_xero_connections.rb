@@ -4,7 +4,8 @@ class CreatePrompaXeroConnections < ActiveRecord::Migration
       t.string :prompa_organisation_id
       t.string :xero_organisation_id
       t.string :xero_token
-      t.boolean :valid
+      t.string :xero_key
+      t.boolean :expired, default: false
 
       t.timestamps null: false
     end

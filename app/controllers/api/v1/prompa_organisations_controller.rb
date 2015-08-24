@@ -22,8 +22,13 @@ module Api
       end
 
       def index
-        @contacts = @xero_client.User.all()
-        render json: @contacts
+        begin
+          @admin = @xero_client.User.first
+          render json: @admin
+        rescue Xeroizer::OAuth::TokenExpired
+          render json:  {error: 'Xero token expired'}
+        end
+
       end
 
     end

@@ -13,7 +13,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   config.mailer_sender = 'noreplay@prompa.com'
-
+  config.secret_key = 'df3b2927b1215eced0584675f228ada83ca4d6027f84305fedaf23a33c753713b69ef93456d12fcaa5b8e300669c7ddf8b8e16b5120c25941451d8c74bce2e36'
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 

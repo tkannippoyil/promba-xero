@@ -23,7 +23,7 @@ class SettingsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def setting_params
-    params.require(:setting).permit(:consumer_key, :consumer_secret, :prompa_url, :prompa_token, :api_token)
+    params.require(:setting).permit(:consumer_key, :consumer_secret, :prompa_url, :api_token)
   end
 
 end

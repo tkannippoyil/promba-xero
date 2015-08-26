@@ -8,6 +8,7 @@
 
 XERO_CONFIG = YAML.load_file("#{::Rails.root}/config/xero.yml")[::Rails.env]
 ADMIN = YAML.load_file("#{::Rails.root}/config/admin.yml")[::Rails.env]
+SETTINGS = YAML.load_file("#{::Rails.root}/config/settings.yml")[::Rails.env]
 
 Admin.create!(
   email: ADMIN['email'],
@@ -18,7 +19,6 @@ Admin.create!(
 Setting.create!(
   consumer_key: XERO_CONFIG['consumer_key'],
   consumer_secret: XERO_CONFIG['consumer_secret'],
-  api_token: 'token1',
-  prompa_url:"http://prompa-sandbox.herokuapp.com/api/v1/",
-  prompa_token:'SRLA1vfJ6o3ZefaEy958',
+  api_token: SETTINGS['api_token'],
+  prompa_url: SETTINGS['prompa_url'],
 ) unless Setting.first

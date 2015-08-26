@@ -48,10 +48,12 @@
         <a class="navbar-brand" href="#">Prompa - Xero</a>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-            <li><%= link_to_if(admin_signed_in?, "Logout",
-                               destroy_admin_session_path,{ method: :delete})
+            <li>
+              <% if admin_signed_in? %>
+              <%= link_to "Logout", destroy_admin_session_path,{ method: :delete} %>
+                <% end %>
 
-            %></li>
+                </li>
           </ul>
         </div>
       </div>
@@ -68,7 +70,9 @@
           <div class="well sidebar-nav">
             <h3>Login Details</h3>
             <ul class="nav nav-list">
-              <li class="nav-header">Email: <%= current_admin.email %></li>
+              <li class="nav-header">Email: <%= current_admin ? current_admin
+                  .email : 'Offline'
+              %></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

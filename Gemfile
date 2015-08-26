@@ -54,3 +54,6 @@ gem "twitter-bootstrap-rails"
 gem 'xeroizer'
 
 gem 'devise'
+gem 'httparty'
+gem 'whenever', :require => false
+

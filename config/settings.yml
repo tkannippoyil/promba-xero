@@ -1,0 +1,12 @@
+
+development:
+  api_token: 'token1'
+  prompa_url: "http://prompa-integration.herokuapp.com/api/v1/"
+
+test:
+  api_token: 'token1'
+  prompa_url: "http://prompa-integration.herokuapp.com/api/v1/"
+
+production:
+  api_token: 'token1'
+  prompa_url: "http://prompa-integration.herokuapp.com/api/v1/"

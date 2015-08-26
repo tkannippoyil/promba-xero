@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150820112815) do
 
   create_table "prompa_organisations", force: :cascade do |t|
     t.string   "owner_id"
+    t.string   "token"
     t.string   "organisation_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -46,16 +47,15 @@ ActiveRecord::Schema.define(version: 20150820112815) do
     t.string   "xero_organisation_id"
     t.string   "xero_token"
     t.string   "xero_key"
-    t.boolean  "expired",                default: true
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.boolean  "expired",                default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
   end
 
   create_table "settings", force: :cascade do |t|
     t.string   "consumer_key"
     t.string   "consumer_secret"
     t.string   "prompa_url"
-    t.string   "prompa_token"
     t.string   "api_token"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false

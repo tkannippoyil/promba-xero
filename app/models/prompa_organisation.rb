@@ -1,7 +1,7 @@
 class PrompaOrganisation < ActiveRecord::Base
   has_one :prompa_xero_connection
 
-  validates_presence_of :organisation_id, :owner_id
+  validates_presence_of :organisation_id, :token
 
   def as_json(options = {})
     if errors.present?

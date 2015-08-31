@@ -17,11 +17,22 @@ class PrompaXeroConnection < ActiveRecord::Base
         @setting.consumer_secret,
     )
 
-    PrompaXeroConnection.all.each do |connection|
-      begin
-        connection.update_contacts
-      rescue Xeroizer::OAuth::TokenExpired
-        logger.info("Invalid xero token")
+    PrompaXeroConnection.joins(:prompa_organisation).where({
+      expired: false,
+      prompa_organisations: {expired: false}
+    }).find_in_batches do |connections|
+      connections.each do |connection|
+        begin
+          connection.update_contacts
+        rescue Xeroizer::OAuth::TokenExpired
+          connection.expired = true
+          connection.save
+          logger.info("Invalid Xero token")
+        rescue InvalidPrompaTokenException
+          connection.prompa_organisation.expired = true
+          connection.save
+          logger.info("Invalid Prompa token")
+        end
       end
     end
   end

@@ -28,20 +28,20 @@ module Api
 
           @prompa_xero_connection= PrompaXeroConnection
                                           .find_or_initialize_by(
-              prompa_organisation_id: params['prompa_organisation_id']
+              prompa_organisation_id: params[:prompa_organisation_id]
           )
 
           @prompa_xero_connection.xero_token = @xero_client.access_token.token
           @prompa_xero_connection.xero_key = @xero_client.access_token.secret
-          @prompa_xero_connection.expired = true
+          @prompa_xero_connection.expired = false
 
 
           @xero_organisation = XeroOrganisation.find_or_initialize_by(
-              organisation_id: params['org']
+              organisation_id: params[:org]
           )
 
           @xero_organisation.owner_id = @xero_client.User.first.id
-          @xero_organisation.organisation_id = params['org']
+          @xero_organisation.organisation_id = params[:org]
           @xero_organisation.save!
 
           @prompa_xero_connection.xero_organisation = @xero_organisation

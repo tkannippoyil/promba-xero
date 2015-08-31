@@ -4,6 +4,7 @@ class CreatePrompaOrganisations < ActiveRecord::Migration
       t.string :owner_id
       t.string :token
       t.string :organisation_id
+      t.boolean :expired, default: false
 
       t.timestamps null: false
     end

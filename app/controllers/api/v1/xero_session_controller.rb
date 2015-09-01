@@ -10,12 +10,13 @@ module Api
 
       def index
         request_token = @xero_client.request_token(
-          :oauth_callback => new_api_xero_session_url(params)
+            oauth_callback: new_api_xero_session_url(params),
+            # scope: 'payroll.employees'
         )
         session[:request_token] = request_token.token
         session[:request_secret] = request_token.secret
 
-        redirect_to request_token.authorize_url
+        redirect_to request_token.authorize_url + "&scope=payroll.employees"
       end
 
       def new
@@ -40,7 +41,7 @@ module Api
               organisation_id: params[:org]
           )
 
-          @xero_organisation.owner_id = @xero_client.User.first.id
+          # @xero_organisation.owner_id = @xero_client.User.first.id
           @xero_organisation.organisation_id = params[:org]
           @xero_organisation.save!
 
@@ -52,10 +53,10 @@ module Api
           session[:request_token] = nil
           session[:request_secret] = nil
 
-          render json: {'success': 'Connected with Xero'}
+          render json: {success: 'Connected to Xero'}
         rescue Exception => error
           session[:xero_auth] = nil
-          render json: {'error': 'Not able to connect with Xero: ' + error.to_s}
+          render json: {error: 'Not able to connect with Xero: ' + error.to_s}
         end
       end
 

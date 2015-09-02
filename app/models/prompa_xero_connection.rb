@@ -44,7 +44,7 @@ class PrompaXeroConnection < ActiveRecord::Base
     @@prompa_conn.authorize(prompa_organisation.token)
     @@xero_conn.authorize_from_access(xero_token, xero_key)
 
-    @prompa_users = @@prompa_conn.get_users
+    @prompa_users = @@prompa_conn.get_staff_members(organisation_id)
     @xero_users = @@xero_conn.Contact.all
 
     @@xero_conn.Contact.batch_save do
@@ -63,7 +63,7 @@ class PrompaXeroConnection < ActiveRecord::Base
 
   def update_xero_users
       @prompa_users.each do |prompa_user|
-        profile = prompa_user['profile']
+        profile = prompa_user['user']['profile']
 
         xero_user = get_xero_user(profile['name'])
 

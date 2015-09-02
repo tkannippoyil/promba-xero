@@ -17,6 +17,8 @@ class PrompaXeroConnection < ActiveRecord::Base
         @setting.consumer_secret,
     )
 
+    @@xero_conn.payroll.Employee.all
+
     PrompaXeroConnection.joins(:prompa_organisation).where({
       expired: false,
       prompa_organisations: {expired: false}

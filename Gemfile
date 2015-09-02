@@ -58,3 +58,4 @@ gem 'devise'
 gem 'httparty'
 gem 'whenever', :require => false
 
+gem "awesome_print", require:"ap"

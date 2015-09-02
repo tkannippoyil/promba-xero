@@ -16,7 +16,7 @@ module Api
         session[:request_token] = request_token.token
         session[:request_secret] = request_token.secret
 
-        redirect_to request_token.authorize_url + "&scope=payroll.employees"
+        redirect_to request_token.authorize_url + "&scope=payroll.employees,payroll.payitems"
       end
 
       def new

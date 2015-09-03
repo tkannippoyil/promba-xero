@@ -4,7 +4,8 @@ machine:
 
 dependencies:
   pre:
-    - sudo rm -rf /home/ubuntu/promba-xero/vendor/bundle/rbx/2.1/cache
+    - sudo rm -rf .bundle/
     - sudo apt-get update
   post:
+    - rake db:create
     - rspec

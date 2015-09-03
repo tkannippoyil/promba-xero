@@ -3,5 +3,7 @@ machine:
     version: rbx-2.2.6
 
 dependencies:
+  pre:
+    - apt-get update
   post:
     - rspec

@@ -3,8 +3,16 @@ class PrompaXeroConnection < ActiveRecord::Base
 
   belongs_to :prompa_organisation
   belongs_to :xero_organisation
+  has_many :employees
 
-  def self.sync
+
+  validates_presence_of :prompa_organisation_id, :xero_organisation_id
+  validates_uniqueness_of :prompa_organisation_id, scope: :xero_organisation_id
+
+
+  # call : PrompaXeroConnection.sync(fetch_new_xero_employees)
+
+  def self.sync(method_name)
 
     @setting = Setting.first
 
@@ -25,7 +33,7 @@ class PrompaXeroConnection < ActiveRecord::Base
     }).find_in_batches do |connections|
       connections.each do |connection|
         begin
-          connection.update_contacts
+          connection.public_send(method_name)
         rescue Xeroizer::OAuth::TokenExpired
           connection.expired = true
           connection.save
@@ -39,6 +47,52 @@ class PrompaXeroConnection < ActiveRecord::Base
     end
   end
 
+
+  def fetch_new_xero_employees
+    @@xero_conn.authorize_from_access(xero_token, xero_key)
+
+    @xero_employees = @@xero_conn.payroll.Employee.all
+    @xero_employees.each { |xero_employee| insert_to_db xero_employee }
+  end
+
+  def insert_to_db xero_employee
+
+    return if already_inserted? xero_employee
+
+    @employee =  Employee.find_or_initialize_by({
+        name: xero_employee.name,
+        date_of_birth: Date.parse(xero_employee.date_of_birth),
+        prompa_xero_connection_id: self.id,
+    })
+
+    @employee.xero_id = xero_employee.id
+
+    insert_new_xero_employee xero_employee unless @employee.prompa_id
+
+    @employee.save!
+  end
+
+  def insert_new_xero_employee(xero_employee)
+    @employee.name = xero_employee.name
+    @employee.first_name = xero_employee.first_name
+    @employee.last_name = xero_employee.last_name
+    @employee.xero_id = xero_employee.id
+    @employee.gender = xero_employee.gender
+    @employee.email = xero_employee.email
+    @employee.phone_number = xero_employee.phone_number
+    @employee.mobile_phone = xero_employee.mobile_phone
+    @employee.address = xero_employee.home_address.address_line1
+    @employee.address_line_2 = xero_employee.home_address.address_line2
+    @employee.state = xero_employee.home_address.region
+    @employee.postcode = xero_employee.home_address.postal_code
+  end
+
+  def already_inserted? user
+    Employee.where({
+        xero_id: user.id,
+        prompa_xero_connection_id: self.id
+    }).present?
+  end
 
   def update_contacts
     @@prompa_conn.authorize(prompa_organisation.token)
@@ -77,26 +131,6 @@ class PrompaXeroConnection < ActiveRecord::Base
         # gender: profile['gender'],
         puts "updating user #{ profile['name'] }"
       end
-  end
-
-  def update_phone_numbers(xero_phones, prompa_phones)
-    xero_phones.each do |phone|
-      phone.number = case phone.type
-                       when 'DEFAULT'
-                         prompa_phones['phone_number']
-                       when 'DDI'
-                         prompa_phones['home_phone']
-                       when 'MOBILE'
-                         prompa_phones['mobile_phone']
-                       when 'FAX'
-                         prompa_phones['mobile_phone']
-                       else
-                         0
-                     end
-      phone.area_code = 0
-      phone.country_code = 0
-    end
-    return xero_phones
   end
 
 end

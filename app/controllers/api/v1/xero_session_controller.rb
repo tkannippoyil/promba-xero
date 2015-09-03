@@ -27,33 +27,27 @@ module Api
               :oauth_verifier => params[:oauth_verifier]
           )
 
-          @prompa_xero_connection= PrompaXeroConnection
-                                          .find_or_initialize_by(
-              prompa_organisation_id: params[:prompa_organisation_id]
+          @xero_organisation = XeroOrganisation.find_or_initialize_by(
+              organisation_id: params[:org]
+          )
+          @xero_organisation.save!
+
+          @prompa_xero_connection= PrompaXeroConnection.find_or_initialize_by(
+              prompa_organisation_id: params[:prompa_organisation_id],
+              xero_organisation_id: @xero_organisation.id
           )
 
           @prompa_xero_connection.xero_token = @xero_client.access_token.token
           @prompa_xero_connection.xero_key = @xero_client.access_token.secret
           @prompa_xero_connection.expired = false
 
-
-          @xero_organisation = XeroOrganisation.find_or_initialize_by(
-              organisation_id: params[:org]
-          )
-
-          # @xero_organisation.owner_id = @xero_client.User.first.id
-          @xero_organisation.organisation_id = params[:org]
-          @xero_organisation.save!
-
-          @prompa_xero_connection.xero_organisation = @xero_organisation
           @prompa_xero_connection.save!
-
-
 
           session[:request_token] = nil
           session[:request_secret] = nil
 
           render json: {success: 'Connected to Xero'}
+
         rescue Exception => error
           session[:xero_auth] = nil
           render json: {error: 'Not able to connect with Xero: ' + error.to_s}

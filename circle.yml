@@ -4,8 +4,9 @@ machine:
 
 dependencies:
   pre:
-    - sudo rm -rf .bundle/
     - sudo apt-get update
+    - sudo rm -rf .bundle/
+    - bundle install
   post:
     - rake db:create
     - rspec

@@ -51,7 +51,8 @@ gem "therubyracer"
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 gem "twitter-bootstrap-rails"
 
-gem 'xeroizer', :git => "git://github.com/tkannippoyil/xeroizer.git", branch: "payroll"
+gem 'xeroizer', :git => "https://github.com/tkannippoyil/xeroizer", branch:
+                  "payroll"
 
 gem 'devise'
 gem 'httparty'

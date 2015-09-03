@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/tkannippoyil/xeroizer.git
+  remote: https://github.com/tkannippoyil/xeroizer
   revision: 0023093960faa85b125bcd9912afb7bbb0356933
   branch: payroll
   specs:
